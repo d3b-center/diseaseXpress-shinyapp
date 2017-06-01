@@ -1,10 +1,12 @@
 # source functions
 source('R/viewDataTable.R')
-source('R/connect_to_server.R')
-source('R/elastic_4_gene.R')
-source('R/elastic_4_transcript.R')
-source('R/elastic_4_kallisto.R')
 source('R/loaddata.R')
+source('R/getBoxplotByStudy.R')
+source('R/getBoxplotByDisease.R')
+source('R/themes.R')
+source('R/getCorr.R')
+source('R/getScatterByStudy.R')
+source('R/getScatterByDisease.R')
 
 m <- list(
   b = 100,
@@ -17,75 +19,176 @@ shinyServer(function(input, output, session){
   # update gene symbols
   observe({
     updateSelectizeInput(session = session, inputId = "gdselectInput0", choices = gene_ann$gene_symbol, server = TRUE)
+    updateSelectizeInput(session = session, inputId = "boxplot1selectInput0", choices = gene_ann$gene_symbol, server = TRUE)
+    updateSelectizeInput(session = session, inputId = "boxplot2selectInput0", choices = gene_ann$gene_symbol, server = TRUE)
+    updateSelectizeInput(session = session, inputId = "dotplotselectInput0", choices = gene_ann$gene_symbol, server = TRUE)
+    updateSelectizeInput(session = session, inputId = "dotplotselectInput1", choices = gene_ann$gene_symbol, server = TRUE)
+    updateSelectizeInput(session = session, inputId = "scatter2selectInput0", choices = gene_ann$gene_symbol, server = TRUE)
+    updateSelectizeInput(session = session, inputId = "scatter2selectInput1", choices = gene_ann$gene_symbol, server = TRUE)
   })
   
-  # update gene ids
+  # update studies
   observe({
-    mynames <- as.character(input$gdselectInput0)
-    mynames <- gene_ann[which(gene_ann$gene_symbol %in% mynames),'gene_id']
-    updateSelectizeInput(session = session, inputId = "gdselectInput1", choices = mynames, server = TRUE)
+    updateSelectizeInput(session = session, inputId = "gdselectInput1", choices = getStudies(), server = TRUE)
+    updateSelectizeInput(session = session, inputId = "boxplot1selectInput1", choices = getStudies(), server = TRUE)
+    updateSelectizeInput(session = session, inputId = "boxplot2selectInput1", choices = getStudies(), server = TRUE)
+    updateSelectizeInput(session = session, inputId = "dotplotselectInput2", choices = getStudies(), server = TRUE)
+    updateSelectizeInput(session = session, inputId = "scatter2selectInput2", choices = getStudies(), server = TRUE)
   })
   
-  # observe({
-  #   if(input$boxplotselectInput2 != "none"){
-  #     x <- as.character(input$boxplotselectInput2)
-  #     x <- plot_vars[which(plot_vars$study %in% x),'V2']
-  #     updateSelectizeInput(session = session, inputId = "boxplotselectInput3", choices = x, server = TRUE)
-  #   }
-  # })
-  # 
-  # observe({
-  #   if(length(input$boxplotselectInput3)>0){
-  #     x <- as.character(input$boxplotselectInput3)
-  #     y <- plot_vars[which(plot_vars$V2 %in% x),'V1']
-  #     updateSelectizeInput(session = session, input = "boxplotselectInput4", choices = y, server = TRUE)
-  #   }
-  # })
-  
+  # update collapse studies
   observe({
-    if(input$gdselectInput3=="RSEM: FPKM"){
-      updateSelectInput(session = session, inputId = "gdselectInput4", choices = c("Gene Biotype"="gene_info.biotype"))
-    }
-    if(input$gdselectInput3=="RSEM: TPM" | input$gdselectInput3=="Kallisto: TPM"){
-      updateSelectInput(session = session, inputId = "gdselectInput4", choices = c("Transcript Biotype"="gene_info.transcripts.biotype"))
+    studies <- c('none', as.character(input$boxplot2selectInput1))
+    updateSelectizeInput(session = session, inputId = "boxplot2selectInput4", choices = studies, server = TRUE)
+  })
+  
+  # update reference
+  observe({
+    studies <- c('none', as.character(input$boxplot2selectInput1))
+    if(input$boxplot2selectInput4 == "none"){
+      disease.sub <- disease[which(disease$study %in% studies),'disease']
+      disease.sub <- c('none', disease.sub)
+      updateSelectizeInput(session = session, inputId = "boxplot2selectInput5", choices = disease.sub, server = TRUE)
+    } else {
+      studies.collapsed <- as.character(input$boxplot2selectInput4) 
+      studies <- setdiff(studies, studies.collapsed)
+      disease.sub <- disease[which(disease$study %in% studies),'disease']
+      disease.sub <- c('none', disease.sub, studies.collapsed)
+      updateSelectizeInput(session = session, inputId = "boxplot2selectInput5", choices = disease.sub, server = TRUE)
     }
   })
   
+  
+  # update disease
+  observe({
+    studies <- input$scatter2selectInput2
+    disease.sub <- disease[which(disease$study %in% studies),'disease']
+    updateSelectizeInput(session = session, inputId = "scatter2selectInput3", choices = disease.sub, server = TRUE)
+  })
   
   # update datatable with query gdtable1
   output$gdtable1 <- DT::renderDataTable({
     if(input$gdsubmit1 == 0){
       return()
     }
-    isolate({
-      genes <- as.character(input$gdselectInput1)
-      study <- as.character(input$gdselectInput2)
-      samp_ids <- sample.info[which(sample.info$study %in% study),'analysis_id']
-      fields <- as.character(input$gdselectInput4)
-      index <- 'disease_express'
-      type <- 'genes'
-      
-      if(input$gdselectInput3 == "RSEM: FPKM"){
-        dat <- get.gene.data(index = index, type = type, genes = genes, fields = fields, samp_ids = samp_ids)
-      }
-      if(input$gdselectInput3 == "RSEM: TPM"){
-        dat <- get.transcript.data(index = index, type = type, genes = genes, fields = fields, samp_ids = samp_ids)
-      }
-      if(input$gdselectInput3 == "Kallisto: TPM"){
-        dat <- get.transcript.data.kallisto(index = index, type = type, genes = genes, fields = fields, samp_ids = samp_ids)
-      }
-      
-      viewDataTable(dat = dat)
+    withProgress(session = session, message = "Getting data...", detail = "Takes a while...",{
+      isolate({
+        genes <- as.character(input$gdselectInput0)
+        study <- as.character(input$gdselectInput1)
+        norm <- as.character(input$gdselectInput3)
+        dat <<- getDataAnnotationByGeneSymbol(myGeneSymbols = genes, myStudy = study, myNorms = norm)
+        viewDataTable(dat = dat)
+      })
     })
   })
   
+  output$download <- downloadHandler(
+    'disease_express.csv', 
+    content = function(file) {
+      write.csv(dat, file)
+  })
+  
+  # boxplot by study
+  output$boxplot1plot1 <- renderPlotly({
+    if(input$boxplot1submit1 == 0){
+      return()
+    }
+    isolate({
+      genes <- input$boxplot1selectInput0
+      studies <- input$boxplot1selectInput1
+      norm <- input$boxplot1selectInput2
+      subset <- input$boxplot1selectInput3
+      log <- input$boxplot1checkboxInput0
+      getBoxplotByStudy(genes = genes, studies = studies, norm = norm, log = log, subset = subset)
+    })
+  })
+  
+  # boxplot by disease
+  output$boxplot2plot1 <- renderPlotly({
+    if(input$boxplot2submit1 == 0){
+      return()
+    }
+    isolate({
+      genes <- input$boxplot2selectInput0
+      studies <- input$boxplot2selectInput1
+      norm <- input$boxplot2selectInput2
+      subset <- input$boxplot2selectInput3
+      log <- input$boxplot2checkboxInput0
+      collapse <- input$boxplot2selectInput4
+      ref <- input$boxplot2selectInput5
+      getBoxplotByDisease(genes = genes, studies = studies, norm = norm, log = log, subset = subset, collapse = collapse, ref = ref)
+    })
+  })
+  
+  # scatterplot by study
+  output$dotplotplot1 <- renderPlotly({
+    if(input$dotplotsubmit1 == 0){
+      return()
+    }
+    isolate({
+      gene1 <- input$dotplotselectInput0
+      gene2 <- input$dotplotselectInput1
+      studies <- input$dotplotselectInput2
+      norm <- input$dotplotselectInput3
+      subset <- input$dotplotselectInput4
+      colorby <- input$dotplotselectInput5
+      correlation <- input$dotplotselectInput6
+      log <- input$dotplotcheckboxInput0
+      dotp <<- getScatterByStudy(gene1 = gene1, gene2 = gene2, studies = studies, norm = norm, log = log, 
+                        subset = subset, colorby = colorby, correlation = correlation)
+      dotp[[1]]
+    }) 
+  })
+  
+  output$dotplottable1 <- renderDataTable({
+    if(input$dotplotsubmit1 == 0){
+      return()
+    }
+    isolate({
+      cor.table <- dotp[[2]]
+      viewDataTable(dat = cor.table)
+    })
+  })
+  
+  # scatterplot by disease
+  output$scatter2plot1 <- renderPlotly({
+    if(input$scatter2submit1 == 0){
+      return()
+    }
+    isolate({
+      gene1 <- input$scatter2selectInput0
+      gene2 <- input$scatter2selectInput1
+      studies <- input$scatter2selectInput2
+      disease <- input$scatter2selectInput3
+      norm <- input$scatter2selectInput4
+      subset <- input$scatter2selectInput5
+      colorby <- input$scatter2selectInput6
+      correlation <- input$scatter2selectInput7
+      log <- input$scatter2checkboxInput0
+      dotpp <<- getScatterByDisease(gene1 = gene1, gene2 = gene2, studies = studies, disease = disease, norm = norm, log = log,
+                                 subset = subset, colorby = colorby, correlation = correlation)
+      dotpp[[1]]
+    })
+  })
+  
+  output$scatter2table1 <- renderDataTable({
+    if(input$scatter2submit1 == 0){
+      return()
+    }
+    isolate({
+      cor.table <- dotpp[[2]]
+      viewDataTable(dat = cor.table)
+    })
+  })
+  
+  ######### dashboard items ############
   output$dashboardplot1 <- renderPlotly({
     isolate({
       pie1 <- plyr::count(sample.info$study)
       p <- plot_ly(pie1, labels = ~x, values = ~freq, type = 'pie', showlegend = FALSE) %>%
-        layout(title = 'Disease-Express Studies',
+        layout(title = 'Disease-Express Studies', font = list(color = 'black'),
                xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-               yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)) %>% 
+               yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)) %>%
         config(displayModeBar = F)
       p
     })
@@ -94,27 +197,23 @@ shinyServer(function(input, output, session){
   output$dashboardplot2 <- renderPlotly({
     tumors <- plyr::count(sample.info[which(sample.info$group == 'Tumors'),c('study','disease')])
     tumors$disease <- reorder(tumors$disease, tumors$freq)
-    tumors$study <- paste0(' | ',tumors$study)
-    p <- plot_ly(tumors, x = ~disease, y=~freq, color=~disease, split = ~study, type= 'bar') %>%
-      layout(title = "", showlegend = F, margin = m,
+    p <- plot_ly(tumors, x = ~disease, y=~freq, color=~study, split = ~study, type= 'bar') %>%
+      layout(title = "", margin = m, font = list(color = 'black', size = 14),
              xaxis = list(tickangle = -45, title = ""),
-             yaxis = list(title = "Number of Samples")) %>%
-      config(displayModeBar = F)
+             yaxis = list(title = "Number of Samples")) %>% config(displayModeBar = F)
     p
   })
   
   output$dashboardplot3 <- renderPlotly({
-
     normals <- plyr::count(sample.info[which(sample.info$group == "Normals"),c('study','tissue')])
     normals$tissue <- reorder(normals$tissue, normals$freq)
     normals$study <- paste0(' | ',normals$study)
     p <- plot_ly(normals, x = ~tissue, y=~freq, color=~tissue, split = ~study, type= 'bar') %>%
-      layout(title = "", showlegend = F, margin = m,
+      layout(title = "", showlegend = F, margin = m, font = list(color = 'black', size = 14),
              xaxis = list(tickangle = -45, title = ""),
-             yaxis = list(title = "Number of Samples")) %>%
-      config(displayModeBar = F)
+             yaxis = list(title = "Number of Samples")) %>% config(displayModeBar = F)
     p
   })
-  
+  ######### dashboard items ############
   
 }) # shinyServer ends
