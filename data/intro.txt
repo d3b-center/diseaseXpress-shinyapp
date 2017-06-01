@@ -1,0 +1,1 @@
+Application to house RNA-Sequencing data from datasources like Genotype-Tissue Expression (GTEx), Therapeutically Applicable Research To Generate Effective Treatments (TARGET), The Cancer Genome Atlas (TCGA) that has been processed and transformed through the same pipeline.
