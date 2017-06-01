@@ -3,9 +3,13 @@
   font-size: 18px;
 }
 
+.form-group {
+  margin-bottom: 0px;
+}
+
 body {
   font-family: "Helvetica";
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.42857143;
   color: #666666;
 }
@@ -15,27 +19,10 @@ body {
   background:#bf432d
 }
 
-.box.box-solid.box-primary{
-  border-bottom-color:#0c417c;
-  border-left-color:#0c417c;
-  border-right-color:#0c417c;
-  border-top-color:#0c417c;
+#download
+{ 
+  color:#fff;
+  background:#bf432d
 }
 
-.tooltip .tooltiptext {
-  font-size: 18px;
-}
 
-.popover-title{
-  color: #7a0000;
-  font-size: 16px;
-  background-color: #000000;
-}
-
-.popover-header{ 
-  background: #ffff99; 
-} 
-
-.popover-content{ 
-  background: #ffff99; 
-}
