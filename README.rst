@@ -22,5 +22,12 @@ RShiny portal to access disease express datasource.
 Note
 ====
 
-This will be available as an R package and on a shiny server soon. 
+This is available as an R package and on a shiny server.
+
+`R package`_
+`Shiny server`_
+
+
+.. _Shiny server: reslndbhidam01.research.chop.edu:3838/DEXTER/
+.. _R package: https://github.research.chop.edu/ramanp/RDiseaseExpress
 
