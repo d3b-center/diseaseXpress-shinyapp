@@ -1,0 +1,73 @@
+study	disease
+TARGET	ALL
+TCGA	KIRP
+TCGA	ACC
+TCGA	PRAD
+TCGA	SARC
+TCGA	LIHC
+TCGA	LUSC
+TCGA	PCPG
+TCGA	BRCA
+TCGA	MESO
+TCGA	BLCA
+TCGA	CESC
+TCGA	LUAD
+TCGA	THCA
+TCGA	HNSC
+TCGA	PAAD
+TCGA	OV
+TARGET	AML
+TARGET	AML-IF
+TCGA	THYM
+TCGA	UCEC
+TCGA	STAD
+TCGA	GBM
+TCGA	KIRC
+TCGA	ESCA
+TCGA	READ
+TCGA	COAD
+TCGA	CHOL
+TCGA	LAML
+TCGA	LGG
+TCGA	SKCM
+TARGET	NBL
+TCGA	UCS
+TCGA	UVM
+TCGA	KICH
+TARGET	WT
+TCGA	TGCT
+TCGA	DLBC
+TARGET	RT
+MB	MB
+GTEx	Esophagus
+GTEx	Testis
+GTEx	Skin
+GTEx	Blood Vessel
+GTEx	Muscle
+GTEx	Stomach
+GTEx	Breast
+GTEx	Blood
+GTEx	Adipose Tissue
+GTEx	Liver
+GTEx	Brain
+GTEx	Prostate
+GTEx	Thyroid
+GTEx	Spleen
+GTEx	Pancreas
+GTEx	Adrenal Gland
+GTEx	Uterus
+GTEx	Heart
+GTEx	Colon
+GTEx	Lung
+GTEx	Nerve
+GTEx	Small Intestine
+GTEx	Vagina
+GTEx	Bone Marrow
+GTEx	Salivary Gland
+GTEx	Fallopian Tube
+GTEx	Ovary
+GTEx	Bladder
+GTEx	Kidney
+GTEx	Cervix Uteri
+GTEx	Pituitary
+SCLC_GSE60052	SCLC
