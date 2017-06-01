@@ -93,13 +93,15 @@ shinyServer(function(input, output, session){
     if(input$boxplot1submit1 == 0){
       return()
     }
-    isolate({
-      genes <- input$boxplot1selectInput0
-      studies <- input$boxplot1selectInput1
-      norm <- input$boxplot1selectInput2
-      subset <- input$boxplot1selectInput3
-      log <- input$boxplot1checkboxInput0
-      getBoxplotByStudy(genes = genes, studies = studies, norm = norm, log = log, subset = subset)
+    withProgress(session = session, message = "Creating plot...", detail = "Takes a while...",{
+      isolate({
+        genes <- input$boxplot1selectInput0
+        studies <- input$boxplot1selectInput1
+        norm <- input$boxplot1selectInput2
+        subset <- input$boxplot1selectInput3
+        log <- input$boxplot1checkboxInput0
+        getBoxplotByStudy(genes = genes, studies = studies, norm = norm, log = log, subset = subset)
+      })
     })
   })
   
@@ -108,15 +110,17 @@ shinyServer(function(input, output, session){
     if(input$boxplot2submit1 == 0){
       return()
     }
-    isolate({
-      genes <- input$boxplot2selectInput0
-      studies <- input$boxplot2selectInput1
-      norm <- input$boxplot2selectInput2
-      subset <- input$boxplot2selectInput3
-      log <- input$boxplot2checkboxInput0
-      collapse <- input$boxplot2selectInput4
-      ref <- input$boxplot2selectInput5
-      getBoxplotByDisease(genes = genes, studies = studies, norm = norm, log = log, subset = subset, collapse = collapse, ref = ref)
+    withProgress(session = session, message = "Creating plot...", detail = "Takes a while...",{
+      isolate({
+        genes <- input$boxplot2selectInput0
+        studies <- input$boxplot2selectInput1
+        norm <- input$boxplot2selectInput2
+        subset <- input$boxplot2selectInput3
+        log <- input$boxplot2checkboxInput0
+        collapse <- input$boxplot2selectInput4
+        ref <- input$boxplot2selectInput5
+        getBoxplotByDisease(genes = genes, studies = studies, norm = norm, log = log, subset = subset, collapse = collapse, ref = ref)
+      })
     })
   })
   
@@ -125,19 +129,21 @@ shinyServer(function(input, output, session){
     if(input$dotplotsubmit1 == 0){
       return()
     }
-    isolate({
-      gene1 <- input$dotplotselectInput0
-      gene2 <- input$dotplotselectInput1
-      studies <- input$dotplotselectInput2
-      norm <- input$dotplotselectInput3
-      subset <- input$dotplotselectInput4
-      colorby <- input$dotplotselectInput5
-      correlation <- input$dotplotselectInput6
-      log <- input$dotplotcheckboxInput0
-      dotp <<- getScatterByStudy(gene1 = gene1, gene2 = gene2, studies = studies, norm = norm, log = log, 
-                        subset = subset, colorby = colorby, correlation = correlation)
-      dotp[[1]]
-    }) 
+    withProgress(session = session, message = "Creating plot...", detail = "Takes a while...",{
+      isolate({
+        gene1 <- input$dotplotselectInput0
+        gene2 <- input$dotplotselectInput1
+        studies <- input$dotplotselectInput2
+        norm <- input$dotplotselectInput3
+        subset <- input$dotplotselectInput4
+        colorby <- input$dotplotselectInput5
+        correlation <- input$dotplotselectInput6
+        log <- input$dotplotcheckboxInput0
+        dotp <<- getScatterByStudy(gene1 = gene1, gene2 = gene2, studies = studies, norm = norm, log = log, 
+                          subset = subset, colorby = colorby, correlation = correlation)
+        dotp[[1]]
+      })
+    })
   })
   
   output$dotplottable1 <- renderDataTable({
@@ -155,19 +161,21 @@ shinyServer(function(input, output, session){
     if(input$scatter2submit1 == 0){
       return()
     }
-    isolate({
-      gene1 <- input$scatter2selectInput0
-      gene2 <- input$scatter2selectInput1
-      studies <- input$scatter2selectInput2
-      disease <- input$scatter2selectInput3
-      norm <- input$scatter2selectInput4
-      subset <- input$scatter2selectInput5
-      colorby <- input$scatter2selectInput6
-      correlation <- input$scatter2selectInput7
-      log <- input$scatter2checkboxInput0
-      dotpp <<- getScatterByDisease(gene1 = gene1, gene2 = gene2, studies = studies, disease = disease, norm = norm, log = log,
-                                 subset = subset, colorby = colorby, correlation = correlation)
-      dotpp[[1]]
+    withProgress(session = session, message = "Creating plot...", detail = "Takes a while...",{
+      isolate({
+        gene1 <- input$scatter2selectInput0
+        gene2 <- input$scatter2selectInput1
+        studies <- input$scatter2selectInput2
+        disease <- input$scatter2selectInput3
+        norm <- input$scatter2selectInput4
+        subset <- input$scatter2selectInput5
+        colorby <- input$scatter2selectInput6
+        correlation <- input$scatter2selectInput7
+        log <- input$scatter2checkboxInput0
+        dotpp <<- getScatterByDisease(gene1 = gene1, gene2 = gene2, studies = studies, disease = disease, norm = norm, log = log,
+                                   subset = subset, colorby = colorby, correlation = correlation)
+        dotpp[[1]]
+      })
     })
   })
   
