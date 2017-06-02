@@ -31,7 +31,9 @@ dashboardPage(
                               menuSubItem(text = "Boxplot-disease", tabName = "boxplot-2", icon = icon("bar-chart"))),
                      menuItem("Scatter plot", icon = icon("line-chart"), tabName = "dotplot",
                               menuSubItem(text = "Scatter-study", tabName = "scatter-1", icon = icon("line-chart")),
-                              menuSubItem(text = "Scatter-disease", tabName = "scatter-2", icon = icon("line-chart")))
+                              menuSubItem(text = "Scatter-disease", tabName = "scatter-2", icon = icon("line-chart"))),
+                     menuItem("Tools", icon = icon("gears"), tabName = "tools",
+                              menuSubItem(text = "Most correlated genes", tabName = "corrgenes", icon = icon("database")))
                      )
   ),
   # dashboardSidebar ends
