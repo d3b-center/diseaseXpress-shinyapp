@@ -9,6 +9,7 @@ library(DT)
 library(plotly)
 library(RColorBrewer)
 library(wesanderson)
+library(reshape2)
 
 dashboardPage(
   
@@ -200,6 +201,25 @@ dashboardPage(
               br(), br(),
               plotlyOutput(outputId = "scatter2plot1", width = "auto", height = "auto"),
               DT::dataTableOutput(outputId = "scatter2table1")
+      ),
+      
+      tabItem(tabName = "corrgenes",
+              fluidRow(
+                box(selectInput(inputId = "corrgenesselectInput0", label = "Study", choices = "none"), 
+                    bsTooltip(id = "corrgenesselectInput0", title = "Select one study", placement = "top", trigger = "hover", options = NULL), width = 2, background = "navy"),
+                box(selectInput(inputId = "corrgenesselectInput1", label = "Disease/Tissue", choices = "none"), 
+                    bsTooltip(id = "corrgenesselectInput1", title = "Select one disease/tissue", placement = "top", trigger = "hover", options = NULL), width = 2, background = "navy"),
+                box(selectInput(inputId = "corrgenesselectInput2", label = "Tumor Subset", choices = c('Primary','Recurrent','All')), 
+                    bsTooltip(id = "corrgenesselectInput2", title = "Select tumor type", placement = "top", trigger = "hover", options = NULL), width = 2, background = "navy"),
+                box(selectInput(inputId = "corrgenesselectInput3", label = "Gene", choices = "none"), 
+                    bsTooltip(id = "corrgenesselectInput3", title = "Select Gene", placement = "top", trigger = "hover", options = NULL), width = 2, background = "navy"),
+                box(selectInput(inputId = "corrgenesselectInput4", label = "Normalization", choices = c('RSEM FPKM' = 'rsem')), 
+                    bsTooltip(id = "corrgenesselectInput4", title = "Select normalization", placement = "top", trigger = "hover", options = NULL), width = 2, background = "navy"),
+                box(textInput(inputId = "corrgenestextInput1", label = "Number", value = "10"), 
+                    bsTooltip(id = "corrgenestextInput1", title = "Number of correlations", placement = "top", trigger = "hover", options = NULL), width = 2, background = "navy")
+              ), 
+              br(), br(),
+              DT::dataTableOutput(outputId = "toolstable1")
       )
     )
   ) # dashboardBody ends

@@ -25,6 +25,7 @@ shinyServer(function(input, output, session){
     updateSelectizeInput(session = session, inputId = "dotplotselectInput1", choices = gene_ann$gene_symbol, server = TRUE)
     updateSelectizeInput(session = session, inputId = "scatter2selectInput0", choices = gene_ann$gene_symbol, server = TRUE)
     updateSelectizeInput(session = session, inputId = "scatter2selectInput1", choices = gene_ann$gene_symbol, server = TRUE)
+    updateSelectizeInput(session = session, inputId = "corrgenesselectInput3", choices = gene_ann$gene_symbol, server = TRUE)
   })
   
   # update studies
@@ -34,6 +35,7 @@ shinyServer(function(input, output, session){
     updateSelectizeInput(session = session, inputId = "boxplot2selectInput1", choices = getStudies(), server = TRUE)
     updateSelectizeInput(session = session, inputId = "dotplotselectInput2", choices = getStudies(), server = TRUE)
     updateSelectizeInput(session = session, inputId = "scatter2selectInput2", choices = getStudies(), server = TRUE)
+    updateSelectizeInput(session = session, inputId = "corrgenesselectInput0", choices = getStudies(), server = TRUE)
   })
   
   # update collapse studies
@@ -58,12 +60,17 @@ shinyServer(function(input, output, session){
     }
   })
   
-  
   # update disease
   observe({
     studies <- input$scatter2selectInput2
     disease.sub <- disease[which(disease$study %in% studies),'disease']
     updateSelectizeInput(session = session, inputId = "scatter2selectInput3", choices = disease.sub, server = TRUE)
+  })
+  
+  observe({
+    studies <- input$corrgenesselectInput0
+    disease.sub <- disease[which(disease$study %in% studies),'disease']
+    updateSelectizeInput(session = session, inputId = "corrgenesselectInput1", choices = disease.sub, server = TRUE)
   })
   
   # update datatable with query gdtable1
