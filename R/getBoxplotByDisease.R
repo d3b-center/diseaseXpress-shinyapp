@@ -5,7 +5,7 @@ getBoxplotByDisease <- function(genes, studies, norm, subset, log, collapse, ref
                                        myStudy = studies, 
                                        myNorms = norm)
   
-  dat <- dat[-which(dat$definition == "Solid Tissue Normal"),]
+  dat <- dat[grep("Solid Tissue Normal", dat$definition, invert = T),]
   
   if(log == TRUE){
     dat$rsem.fpkm <- log2(dat$rsem.fpkm+1)

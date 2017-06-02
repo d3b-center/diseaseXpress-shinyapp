@@ -16,7 +16,8 @@ getScatterByDisease <- function(gene1, gene2, studies, disease, norm, log, subse
                                        myNorms = norm)
   
   dat$disease <- ifelse(dat$disease == "NA", dat$tissue, dat$disease)
-  dat <- dat[which(dat$definition != "Solid Tissue Normal" & dat$disease %in% disease),]
+  dat <- dat[grep("Solid Tissue Normal", dat$definition, invert = T),]
+  dat <- dat[which(dat$disease %in% disease),]
   
   if(log == TRUE){
     dat$rsem.fpkm <- log2(dat$rsem.fpkm+1)
