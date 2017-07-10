@@ -15,12 +15,12 @@ getScatterByDisease <- function(gene1, gene2, studies, disease, norm, log, subse
                                        myStudy = studies, 
                                        myNorms = norm)
   
-  dat$disease <- ifelse(dat$disease == "NA", dat$tissue, dat$disease)
+  dat$disease <- ifelse(is.na(dat$disease), dat$tissue, dat$disease)
   dat <- dat[grep("Solid Tissue Normal", dat$definition, invert = T),]
   dat <- dat[which(dat$disease %in% disease),]
   
   if(log == TRUE){
-    dat$rsem.fpkm <- log2(dat$rsem.fpkm+1)
+    dat$data.rsem.fpkm <- log2(dat$data.rsem.fpkm+1)
   }
   
   if(subset != "All"){
@@ -31,11 +31,11 @@ getScatterByDisease <- function(gene1, gene2, studies, disease, norm, log, subse
   
   defs <- c('normal', defs)
   defs <- paste(defs, collapse = "|")
-  dat <- dat[grep(defs, ignore.case = T, dat$definition), c('study','sample_id','rsem.fpkm','disease','tissue','Symbol', 'definition')]
-  dat <- dat %>% group_by(sample_id, Symbol) %>% mutate(rsem.fpkm = mean(rsem.fpkm)) %>% as.data.frame() %>% unique()
+  dat <- dat[grep(defs, ignore.case = T, dat$definition), c('study','data.sample_id','data.rsem.fpkm','disease','tissue','gene_symbol','definition')]
+  dat <- dat %>% group_by(data.sample_id, gene_symbol) %>% mutate(data.rsem.fpkm = mean(data.rsem.fpkm)) %>% as.data.frame() %>% unique()
   
   
-  dat <- dcast(data = dat, formula = study + sample_id + disease + definition ~ Symbol, value.var = "rsem.fpkm")
+  dat <- dcast(data = dat, formula = study + data.sample_id + disease + definition ~ gene_symbol, value.var = "data.rsem.fpkm")
   
   # modify gene name, dashes present
   gene1.mut <- paste0('`',gene1,'`')

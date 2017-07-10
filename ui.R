@@ -1,4 +1,4 @@
-library(RDiseaseExpress)
+library(RDiseaseXpress)
 library(shiny)
 library(shinyjs)
 library(shinydashboard)

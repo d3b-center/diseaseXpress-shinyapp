@@ -18,14 +18,14 @@ shinyServer(function(input, output, session){
   
   # update gene symbols
   observe({
-    updateSelectizeInput(session = session, inputId = "gdselectInput0", choices = gene_ann$gene_symbol, server = TRUE)
-    updateSelectizeInput(session = session, inputId = "boxplot1selectInput0", choices = gene_ann$gene_symbol, server = TRUE)
-    updateSelectizeInput(session = session, inputId = "boxplot2selectInput0", choices = gene_ann$gene_symbol, server = TRUE)
-    updateSelectizeInput(session = session, inputId = "dotplotselectInput0", choices = gene_ann$gene_symbol, server = TRUE)
-    updateSelectizeInput(session = session, inputId = "dotplotselectInput1", choices = gene_ann$gene_symbol, server = TRUE)
-    updateSelectizeInput(session = session, inputId = "scatter2selectInput0", choices = gene_ann$gene_symbol, server = TRUE)
-    updateSelectizeInput(session = session, inputId = "scatter2selectInput1", choices = gene_ann$gene_symbol, server = TRUE)
-    updateSelectizeInput(session = session, inputId = "corrgenesselectInput3", choices = gene_ann$gene_symbol, server = TRUE)
+    updateSelectizeInput(session = session, inputId = "gdselectInput0", choices = getGeneSymbols(), server = TRUE)
+    updateSelectizeInput(session = session, inputId = "boxplot1selectInput0", choices = getGeneSymbols(), server = TRUE)
+    updateSelectizeInput(session = session, inputId = "boxplot2selectInput0", choices = getGeneSymbols(), server = TRUE)
+    updateSelectizeInput(session = session, inputId = "dotplotselectInput0", choices = getGeneSymbols(), server = TRUE)
+    updateSelectizeInput(session = session, inputId = "dotplotselectInput1", choices = getGeneSymbols(), server = TRUE)
+    updateSelectizeInput(session = session, inputId = "scatter2selectInput0", choices = getGeneSymbols(), server = TRUE)
+    updateSelectizeInput(session = session, inputId = "scatter2selectInput1", choices = getGeneSymbols(), server = TRUE)
+    updateSelectizeInput(session = session, inputId = "corrgenesselectInput3", choices = getGeneSymbols(), server = TRUE)
   })
   
   # update studies
