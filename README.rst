@@ -29,5 +29,5 @@ This is available as an R package and on a shiny server.
 
 .. links:
 .. _Shiny server: http://reslndbhidam01.research.chop.edu:3838/DEXTER
-.. _R package: https://github.research.chop.edu/ramanp/RDiseaseExpress
+.. _R package: https://github.research.chop.edu/rathik/RDiseaseXpress
 
