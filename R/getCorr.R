@@ -1,8 +1,13 @@
 
-getCorr <- function(dat, gene1, gene2, correlation){
+getCorr <- function(dat, gene1, gene2, correlation, log){
   
-  x <- dat[,gene1]
-  y <- dat[,gene2]
+  if(log == FALSE){
+    x <- log2(dat[,gene1]+1)
+    y <- log2(dat[,gene2]+1)
+  } else {
+    x <- dat[,gene1]
+    y <- dat[,gene2]
+  }
   
   cor <- cor.test(x = x, y = y, method = correlation)
   

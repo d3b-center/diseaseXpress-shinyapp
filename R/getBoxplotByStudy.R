@@ -1,5 +1,13 @@
 getBoxplotByStudy <- function(genes, studies, norm, subset, log){
   
+  if(norm == 'rsem'){
+    lab <- 'RSEM_Gene'
+  } else if(norm == 'sample_rsem_isoform') {
+    lab <- 'RSEM_Isoform'
+  } else {
+    lab <- 'Kallisto_Abundance'
+  }
+  
   dat <- getDataAnnotationByGeneSymbol(myGeneSymbols = genes, 
                                        myStudy = studies, 
                                        myNorms = norm)
@@ -8,6 +16,7 @@ getBoxplotByStudy <- function(genes, studies, norm, subset, log){
   
   if(log == TRUE){
     dat$data.rsem.fpkm <- log2(dat$data.rsem.fpkm+1)
+    lab <- paste0('log2_', lab)
   }
   
   if(subset != "All"){
@@ -17,7 +26,7 @@ getBoxplotByStudy <- function(genes, studies, norm, subset, log){
     dat <- dat[grep(defs, ignore.case = T, dat$definition), c('study','data.sample_id','data.rsem.fpkm')]
   }
  
-  p <- ggplot(dat, aes(x = study, y = data.rsem.fpkm, fill = study)) + geom_boxplot() + guides(fill = FALSE) + xlab('') + mytheme() + scale_fill_brewer(palette = 'Set1')
+  p <- ggplot(dat, aes(x = study, y = data.rsem.fpkm, fill = study)) + geom_boxplot() + guides(fill = FALSE) + xlab('') + ylab(lab) + mytheme() + scale_fill_brewer(palette = 'Set1')
   p <- plotly_build(p)
   
   return(p)

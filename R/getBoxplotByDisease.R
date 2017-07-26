@@ -1,6 +1,14 @@
 
 getBoxplotByDisease <- function(genes, studies, norm, subset, log, collapse, ref){
   
+  if(norm == 'rsem'){
+    lab <- 'RSEM_Gene'
+  } else if(norm == 'sample_rsem_isoform') {
+    lab <- 'RSEM_Isoform'
+  } else {
+    lab <- 'Kallisto_Abundance'
+  }
+  
   dat <- getDataAnnotationByGeneSymbol(myGeneSymbols = genes, 
                                        myStudy = studies, 
                                        myNorms = norm)
@@ -9,6 +17,7 @@ getBoxplotByDisease <- function(genes, studies, norm, subset, log, collapse, ref
   
   if(log == TRUE){
     dat$data.rsem.fpkm <- log2(dat$data.rsem.fpkm+1)
+    lab <- paste0('log2_', lab)
   }
   
   if(subset != "All"){
@@ -41,12 +50,14 @@ getBoxplotByDisease <- function(genes, studies, norm, subset, log, collapse, ref
   dat$freq <- factor(dat$freq, levels = as.character(to.lev$freq))
   
   # set reference level
-  if(ref != 'none'){
+  if(ref == ''){
+    ref <- 'none'
+  } else if(ref != 'none'){
     ref <- grep(ref, levels(dat$freq), value = T)
     dat$freq <- relevel(x = dat$freq, ref = ref)
   }
   
-  p <- ggplot(dat, aes(x = freq, y = data.rsem.fpkm, fill = study)) + geom_boxplot() + xlab('') + mytheme2() + scale_fill_brewer(palette = 'Set1')
+  p <- ggplot(dat, aes(x = freq, y = data.rsem.fpkm, fill = study)) + geom_boxplot() + xlab('') + ylab(lab) + mytheme2() + scale_fill_brewer(palette = 'Set1')
   p <- plotly_build(p)
   
   return(p)
