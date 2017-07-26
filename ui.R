@@ -14,7 +14,7 @@ library(reshape2)
 dashboardPage(
   
   # dashboardHeader begins
-  dashboardHeader(title = 'Disease EXpress TERminal (DEXTER)', titleWidth = 400), 
+  dashboardHeader(title = 'DiseaseXpress', titleWidth = 400), 
   # dashboardHeader ends
   
   # dashboardSidebar begins

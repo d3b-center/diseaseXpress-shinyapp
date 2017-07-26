@@ -14,6 +14,8 @@ m <- list(
   pad = 4
 )
 
+all.studies <- setdiff(getStudies(),"PNOC")
+
 shinyServer(function(input, output, session){
   
   # update gene symbols
@@ -30,12 +32,12 @@ shinyServer(function(input, output, session){
   
   # update studies
   observe({
-    updateSelectizeInput(session = session, inputId = "gdselectInput1", choices = getStudies(), server = TRUE)
-    updateSelectizeInput(session = session, inputId = "boxplot1selectInput1", choices = getStudies(), server = TRUE)
-    updateSelectizeInput(session = session, inputId = "boxplot2selectInput1", choices = getStudies(), server = TRUE)
-    updateSelectizeInput(session = session, inputId = "dotplotselectInput2", choices = getStudies(), server = TRUE)
-    updateSelectizeInput(session = session, inputId = "scatter2selectInput2", choices = getStudies(), server = TRUE)
-    updateSelectizeInput(session = session, inputId = "corrgenesselectInput0", choices = getStudies(), server = TRUE)
+    updateSelectizeInput(session = session, inputId = "gdselectInput1", choices = all.studies, server = TRUE)
+    updateSelectizeInput(session = session, inputId = "boxplot1selectInput1", choices = all.studies, server = TRUE)
+    updateSelectizeInput(session = session, inputId = "boxplot2selectInput1", choices = all.studies, server = TRUE)
+    updateSelectizeInput(session = session, inputId = "dotplotselectInput2", choices = all.studies, server = TRUE)
+    updateSelectizeInput(session = session, inputId = "scatter2selectInput2", choices = all.studies, server = TRUE)
+    updateSelectizeInput(session = session, inputId = "corrgenesselectInput0", choices = all.studies, server = TRUE)
   })
   
   # update collapse studies
