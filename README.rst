@@ -28,6 +28,6 @@ This is available as an R package and on a shiny server.
 * `Shiny server`_
 
 .. links:
-.. _Shiny server: http://reslndbhidam01.research.chop.edu:3838/DEXTER
+.. _Shiny server: http://reslndbhidam01.research.chop.edu:3838/diseaseXpress
 .. _R package: https://github.research.chop.edu/rathik/RDiseaseXpress
 
