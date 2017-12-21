@@ -24,7 +24,7 @@ getBoxplotByDisease <- function(genes, studies, norm, subset, log, collapse, ref
     defs <- subset
     defs <- c('normal', defs)
     defs <- paste(defs, collapse = "|")
-    dat <- dat[grep(defs, ignore.case = T, dat$definition), c('study','data.sample_id','data.rsem.fpkm','disease','tissue')]
+    dat <- dat[grep(defs, ignore.case = T, dat$definition), c('study_id','data.sample_id','data.rsem.fpkm','disease','tissue')]
   }
   
   dat$disease <- ifelse(is.na(dat$disease), dat$tissue, dat$disease)
@@ -37,8 +37,8 @@ getBoxplotByDisease <- function(genes, studies, norm, subset, log, collapse, ref
   
   if(collapse != 'none'){
     dat <- dat %>% group_by(disease) %>% mutate(mean = mean(data.rsem.fpkm)) %>% as.data.frame()
-    dat[which(dat$study==collapse),'data.rsem.fpkm'] <- dat[which(dat$study == collapse),'mean']
-    dat[which(dat$study==collapse),'disease'] <- collapse
+    dat[which(dat$study_id==collapse),'data.rsem.fpkm'] <- dat[which(dat$study_id == collapse),'mean']
+    dat[which(dat$study_id==collapse),'disease'] <- collapse
   }
   
   # number of samples
@@ -57,7 +57,7 @@ getBoxplotByDisease <- function(genes, studies, norm, subset, log, collapse, ref
     dat$freq <- relevel(x = dat$freq, ref = ref)
   }
   
-  p <- ggplot(dat, aes(x = freq, y = data.rsem.fpkm, fill = study)) + geom_boxplot() + xlab('') + ylab(lab) + mytheme2() + scale_fill_brewer(palette = 'Set1')
+  p <- ggplot(dat, aes(x = freq, y = data.rsem.fpkm, fill = study_id)) + geom_boxplot() + xlab('') + ylab(lab) + mytheme2() + scale_fill_brewer(palette = 'Set1')
   p <- plotly_build(p)
   
   return(p)

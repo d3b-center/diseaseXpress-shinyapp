@@ -29,11 +29,11 @@ getScatterByStudy <- function(gene1, gene2, studies, norm, log, subset, colorby,
   
   defs <- c('normal', defs)
   defs <- paste(defs, collapse = "|")
-  dat <- dat[grep(defs, ignore.case = T, dat$definition), c('study','data.sample_id','data.rsem.fpkm','disease','tissue','gene_symbol', 'definition')]
+  dat <- dat[grep(defs, ignore.case = T, dat$definition), c('study_id','data.sample_id','data.rsem.fpkm','disease','tissue','gene_symbol', 'definition')]
   dat <- dat %>% group_by(data.sample_id, gene_symbol) %>% mutate(data.rsem.fpkm = mean(data.rsem.fpkm)) %>% as.data.frame() %>% unique()
   dat$disease <- ifelse(is.na(dat$disease), dat$tissue, dat$disease)
   
-  dat <- dcast(data = dat, formula = study + data.sample_id + disease + definition ~ gene_symbol, value.var = "data.rsem.fpkm")
+  dat <- dcast(data = dat, formula = study_id + data.sample_id + disease + definition ~ gene_symbol, value.var = "data.rsem.fpkm")
   
   # modify gene name, dashes present
   gene1.mut <- paste0('`',gene1,'`')

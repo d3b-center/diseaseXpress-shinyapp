@@ -14,7 +14,10 @@ m <- list(
   pad = 4
 )
 
-all.studies <- setdiff(getStudies(),"PNOC")
+sample.info <- getSamples()
+sample.info <- as.data.frame(sample.info)
+sample.info$group <- ifelse(sample.info$study_id == "GTEx", "Normals", "Tumors")
+sample.info$disease <- ifelse(is.na(sample.info$disease), sample.info$tissue, sample.info$disease)
 
 shinyServer(function(input, output, session){
   
@@ -32,12 +35,12 @@ shinyServer(function(input, output, session){
   
   # update studies
   observe({
-    updateSelectizeInput(session = session, inputId = "gdselectInput1", choices = all.studies, server = TRUE)
-    updateSelectizeInput(session = session, inputId = "boxplot1selectInput1", choices = all.studies, server = TRUE)
-    updateSelectizeInput(session = session, inputId = "boxplot2selectInput1", choices = all.studies, server = TRUE)
-    updateSelectizeInput(session = session, inputId = "dotplotselectInput2", choices = all.studies, server = TRUE)
-    updateSelectizeInput(session = session, inputId = "scatter2selectInput2", choices = all.studies, server = TRUE)
-    updateSelectizeInput(session = session, inputId = "corrgenesselectInput0", choices = all.studies, server = TRUE)
+    updateSelectizeInput(session = session, inputId = "gdselectInput1", choices = getStudies(), server = TRUE)
+    updateSelectizeInput(session = session, inputId = "boxplot1selectInput1", choices = getStudies(), server = TRUE)
+    updateSelectizeInput(session = session, inputId = "boxplot2selectInput1", choices = getStudies(), server = TRUE)
+    updateSelectizeInput(session = session, inputId = "dotplotselectInput2", choices = getStudies(), server = TRUE)
+    updateSelectizeInput(session = session, inputId = "scatter2selectInput2", choices = getStudies(), server = TRUE)
+    updateSelectizeInput(session = session, inputId = "corrgenesselectInput0", choices = getStudies(), server = TRUE)
   })
   
   # update collapse studies
@@ -50,13 +53,13 @@ shinyServer(function(input, output, session){
   observe({
     studies <- c('none', as.character(input$boxplot2selectInput1))
     if(input$boxplot2selectInput4 == "none"){
-      disease.sub <- disease[which(disease$study %in% studies),'disease']
+      disease.sub <- unique(sample.info[which(sample.info$study_id %in% studies),'disease'])
       disease.sub <- c('none', disease.sub)
       updateSelectizeInput(session = session, inputId = "boxplot2selectInput5", choices = disease.sub, server = TRUE)
     } else {
       studies.collapsed <- as.character(input$boxplot2selectInput4) 
       studies <- setdiff(studies, studies.collapsed)
-      disease.sub <- disease[which(disease$study %in% studies),'disease']
+      disease.sub <- unique(sample.info[which(sample.info$study_id %in% studies),'disease'])
       disease.sub <- c('none', disease.sub, studies.collapsed)
       updateSelectizeInput(session = session, inputId = "boxplot2selectInput5", choices = disease.sub, server = TRUE)
     }
@@ -65,13 +68,13 @@ shinyServer(function(input, output, session){
   # update disease
   observe({
     studies <- input$scatter2selectInput2
-    disease.sub <- disease[which(disease$study %in% studies),'disease']
+    disease.sub <- unique(sample.info[which(sample.info$study_id %in% studies),'disease'])
     updateSelectizeInput(session = session, inputId = "scatter2selectInput3", choices = disease.sub, server = TRUE)
   })
   
   observe({
     studies <- input$corrgenesselectInput0
-    disease.sub <- disease[which(disease$study %in% studies),'disease']
+    disease.sub <- unique(sample.info[which(sample.info$study_id %in% studies),'disease'])
     updateSelectizeInput(session = session, inputId = "corrgenesselectInput1", choices = disease.sub, server = TRUE)
   })
   
@@ -201,7 +204,8 @@ shinyServer(function(input, output, session){
   ######### dashboard items ############
   output$dashboardplot1 <- renderPlotly({
     isolate({
-      pie1 <- plyr::count(sample.info$study)
+      # pie1 <- plyr::count(sample.info$study)
+      pie1 <- plyr::count(sample.info$study_id)
       p <- plot_ly(pie1, labels = ~x, values = ~freq, type = 'pie', showlegend = FALSE) %>%
         layout(title = 'Disease-Express Studies', font = list(color = 'black'),
                xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
@@ -212,9 +216,9 @@ shinyServer(function(input, output, session){
   })
   
   output$dashboardplot2 <- renderPlotly({
-    tumors <- plyr::count(sample.info[which(sample.info$group == 'Tumors'),c('study','disease')])
+    tumors <- plyr::count(sample.info[which(sample.info$group == 'Tumors'),c('study_id','disease')])
     tumors$disease <- reorder(tumors$disease, tumors$freq)
-    p <- plot_ly(tumors, x = ~disease, y=~freq, color=~study, split = ~study, type= 'bar') %>%
+    p <- plot_ly(tumors, x = ~disease, y=~freq, color=~study_id, split = ~study_id, type= 'bar') %>%
       layout(title = "", margin = m, font = list(color = 'black', size = 14),
              xaxis = list(tickangle = -45, title = ""),
              yaxis = list(title = "Number of Samples")) %>% config(displayModeBar = F)
@@ -222,10 +226,10 @@ shinyServer(function(input, output, session){
   })
   
   output$dashboardplot3 <- renderPlotly({
-    normals <- plyr::count(sample.info[which(sample.info$group == "Normals"),c('study','tissue')])
+    normals <- plyr::count(sample.info[which(sample.info$group == "Normals"),c('study_id','tissue')])
     normals$tissue <- reorder(normals$tissue, normals$freq)
-    normals$study <- paste0(' | ',normals$study)
-    p <- plot_ly(normals, x = ~tissue, y=~freq, color=~tissue, split = ~study, type= 'bar') %>%
+    normals$study_id <- paste0(' | ',normals$study_id)
+    p <- plot_ly(normals, x = ~tissue, y=~freq, color=~tissue, split = ~study_id, type= 'bar') %>%
       layout(title = "", showlegend = F, margin = m, font = list(color = 'black', size = 14),
              xaxis = list(tickangle = -45, title = ""),
              yaxis = list(title = "Number of Samples")) %>% config(displayModeBar = F)

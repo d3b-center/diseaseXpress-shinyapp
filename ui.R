@@ -157,7 +157,7 @@ dashboardPage(
               fluidRow(
                 box(checkboxInput(inputId = "dotplotcheckboxInput0", label = "Log", value = FALSE), 
                     bsTooltip(id = "dotplotcheckboxInput0", title = "Convert to log2", placement = "top", trigger = "hover", options = NULL), width = 2, background = "navy"),
-                box(selectInput(inputId = "dotplotselectInput5", label = "Colorby", choices = c('Study'='study','Tumor Subset'='definition','Disease/Tissue'='disease')), 
+                box(selectInput(inputId = "dotplotselectInput5", label = "Colorby", choices = c('Study'='study_id','Tumor Subset'='definition','Disease/Tissue'='disease')), 
                     bsTooltip(id = "dotplotselectInput5", title = "Color the points?", placement = "top", trigger = "hover", options = NULL), width = 2, background = "navy"),
                 box(selectInput(inputId = "dotplotselectInput6", label = "Correlation", choices = c('pearson','spearman')), 
                     bsTooltip(id = "dotplotselectInput6", title = "Select correlation method", placement = "top", trigger = "hover", options = NULL), width = 2, background = "navy")
@@ -189,7 +189,7 @@ dashboardPage(
               fluidRow(
                 box(checkboxInput(inputId = "scatter2checkboxInput0", label = "Log", value = FALSE), 
                     bsTooltip(id = "scatter2checkboxInput0", title = "Convert to log2", placement = "top", trigger = "hover", options = NULL), width = 2, background = "navy"),
-                box(selectInput(inputId = "scatter2selectInput6", label = "Colorby", choices = c('Study'='study','Tumor Subset'='definition','Disease/Tissue'='disease')), 
+                box(selectInput(inputId = "scatter2selectInput6", label = "Colorby", choices = c('Study'='study_id','Tumor Subset'='definition','Disease/Tissue'='disease')), 
                     bsTooltip(id = "scatter2selectInput6", title = "Color the points?", placement = "top", trigger = "hover", options = NULL), width = 2, background = "navy"),
                 box(selectInput(inputId = "scatter2selectInput7", label = "Correlation", choices = c('pearson','spearman')), 
                     bsTooltip(id = "scatter2selectInput7", title = "Select correlation method", placement = "top", trigger = "hover", options = NULL), width = 2, background = "navy")

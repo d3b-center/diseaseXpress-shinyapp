@@ -23,10 +23,10 @@ getBoxplotByStudy <- function(genes, studies, norm, subset, log){
     defs <- subset
     defs <- c('normal', defs)
     defs <- paste(defs, collapse = "|")
-    dat <- dat[grep(defs, ignore.case = T, dat$definition), c('study','data.sample_id','data.rsem.fpkm')]
+    dat <- dat[grep(defs, ignore.case = T, dat$definition), c('study_id','data.sample_id','data.rsem.fpkm')]
   }
  
-  p <- ggplot(dat, aes(x = study, y = data.rsem.fpkm, fill = study)) + geom_boxplot() + guides(fill = FALSE) + xlab('') + ylab(lab) + mytheme() + scale_fill_brewer(palette = 'Set1')
+  p <- ggplot(dat, aes(x = study_id, y = data.rsem.fpkm, fill = study_id)) + geom_boxplot() + guides(fill = FALSE) + xlab('') + ylab(lab) + mytheme() + scale_fill_brewer(palette = 'Set1')
   p <- plotly_build(p)
   
   return(p)
