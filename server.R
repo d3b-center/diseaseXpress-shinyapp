@@ -14,10 +14,10 @@ m <- list(
   pad = 4
 )
 
-sample.info <- getSamples()
-sample.info <- as.data.frame(sample.info)
-sample.info$group <- ifelse(sample.info$study_id == "GTEx", "Normals", "Tumors")
-sample.info$disease <- ifelse(is.na(sample.info$disease), sample.info$tissue, sample.info$disease)
+# sample.info <- getSamples()
+# sample.info <- as.data.frame(sample.info)
+# sample.info$group <- ifelse(sample.info$study_id == "GTEx", "Normals", "Tumors")
+# sample.info$disease <- ifelse(is.na(sample.info$disease), sample.info$tissue, sample.info$disease)
 
 shinyServer(function(input, output, session){
   
