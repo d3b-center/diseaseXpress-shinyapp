@@ -14,6 +14,11 @@ Disease-Express Lab Web Portal
    :keywords: web, portal, rshiny, 2016
    :description: D3B Rshiny Web Portal.
 
+NOTE
+====
+
+This repo is deprecated. Plan is to update the shiny app by pulling in data from https://github.com/d3b-center/OpenPedCan-analysis
+
 Introduction
 ============
 
